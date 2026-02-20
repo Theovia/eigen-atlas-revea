@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eigen Atlas — Dr. Rafael Chaparro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@200;300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --white: #FFFFFF;
+            --black: #0A0A0A;
+            --gray-light: #F8F8F8;
+            --gray-mid: #E0E0E0;
+            --gray-text: #666666;
+            --teal: #2D9B9B;
+            --gold: #C9A961;
+            --red: #E74C3C;
+            --green: #27AE60;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+
+        /* ====== HERO ====== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10vw;
+            position: relative;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .hero-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 48px;
+        }
+
+        .hero-question {
+            font-size: clamp(32px, 5vw, 72px);
+            font-weight: 200;
+            line-height: 1.2;
+            max-width: 900px;
+            margin-bottom: 32px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .hero-answer {
+            font-size: clamp(48px, 7vw, 100px);
+            font-weight: 700;
+            line-height: 0.95;
+            max-width: 1000px;
+            background: linear-gradient(135deg, var(--teal), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-meta {
+            position: absolute;
+            bottom: 64px;
+            left: 10vw;
+            font-size: 13px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 64px;
+            right: 10vw;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* ====== PROBLEM ====== */
+        .problem {
+            padding: 15vh 10vw;
+            background: var(--white);
+        }
+
+        .problem-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 48px;
+            font-weight: 500;
+        }
+
+        .problem-title {
+            font-size: clamp(28px, 4vw, 56px);
+            font-weight: 600;
+            margin-bottom: 80px;
+            max-width: 800px;
+            line-height: 1.2;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+        }
+
+        .problem-item {
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .problem-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 8px;
+            height: 8px;
+            background: var(--red);
+            border-radius: 50%;
+        }
+
+        .problem-item h4 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .problem-item p {
+            font-size: 15px;
+            color: var(--gray-text);
+            line-height: 1.7;
+        }
+
+        .problem-item .number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--red);
+            opacity: 0.3;
+            margin-bottom: 8px;
+        }
+
+        /* ====== SOLUTION INTRO ====== */
+        .solution-intro {
+            padding: 20vh 10vw;
+            background: var(--gray-light);
+            text-align: center;
+        }
+
+        .solution-intro-text {
+            font-size: clamp(24px, 3.5vw, 48px);
+            font-weight: 400;
+            line-height: 1.4;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .solution-intro-text .highlight {
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        /* ====== PILLARS ====== */
+        .pillars {
+            padding: 15vh 10vw;
+        }
+
+        .pillars-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 48px;
+            font-weight: 500;
+        }
+
+        .pillar {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 80px;
+            padding: 80px 0;
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .pillar:last-child { border-bottom: none; }
+
+        .pillar-number {
+            font-size: clamp(72px, 10vw, 140px);
+            font-weight: 700;
+            color: var(--teal);
+            opacity: 0.15;
+            line-height: 0.8;
+        }
+
+        .pillar-content h3 {
+            font-size: clamp(28px, 3vw, 42px);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .pillar-content .subtitle {
+            font-size: 18px;
+            color: var(--teal);
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .pillar-content p {
+            font-size: 16px;
+            color: var(--gray-text);
+            line-height: 1.8;
+            margin-bottom: 32px;
+            max-width: 700px;
+        }
+
+        .pillar-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .pillar-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--gray-text);
+        }
+
+        .pillar-feature .check {
+            color: var(--teal);
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ====== CHATBOT DEMO ====== */
+        .chatbot-demo {
+            padding: 15vh 10vw;
+            background: #1A1A2E;
+            color: var(--white);
+        }
+
+        .chatbot-demo-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 48px;
+        }
+
+        .chatbot-demo-title {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 600;
+            margin-bottom: 64px;
+        }
+
+        .chat-window {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .chat-name { font-size: 14px; font-weight: 500; }
+        .chat-status { font-size: 11px; color: var(--teal); }
+
+        .chat-body { padding: 24px; }
+
+        .chat-msg {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .chat-msg.patient {
+            background: rgba(255,255,255,0.1);
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-msg.bot {
+            background: var(--teal);
+            color: white;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-msg .time {
+            font-size: 10px;
+            opacity: 0.5;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .chat-context {
+            max-width: 500px;
+            margin: 48px auto 0;
+        }
+
+        .chat-context-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .chat-context-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .chat-context-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+        }
+
+        .chat-context-text strong {
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        /* ====== REVIEWS ENGINE ====== */
+        .reviews-engine {
+            padding: 15vh 10vw;
+            background: var(--white);
+        }
+
+        .reviews-engine-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 48px;
+            font-weight: 500;
+        }
+
+        .reviews-engine-title {
+            font-size: clamp(28px, 4vw, 56px);
+            font-weight: 600;
+            margin-bottom: 24px;
+            max-width: 700px;
+        }
+
+        .reviews-engine-subtitle {
+            font-size: 18px;
+            color: var(--gray-text);
+            margin-bottom: 80px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .reviews-flow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-bottom: 80px;
+        }
+
+        .flow-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 24px;
+            font-size: 24px;
+            color: var(--gray-mid);
+        }
+
+        .flow-step:last-child::after { display: none; }
+
+        .flow-step-num {
+            width: 48px;
+            height: 48px;
+            background: var(--gold);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+
+        .flow-step h4 { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+        .flow-step p { font-size: 13px; color: var(--gray-text); line-height: 1.5; }
+
+        .reviews-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+        }
+
+        .reviews-box {
+            padding: 40px;
+            border-radius: 8px;
+        }
+
+        .reviews-box.before {
+            background: #FFF5F5;
+            border: 1px solid #FED7D7;
+        }
+
+        .reviews-box.after {
+            background: #F0FFF4;
+            border: 1px solid #C6F6D5;
+        }
+
+        .reviews-box-label {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .reviews-box.before .reviews-box-label { color: var(--red); }
+        .reviews-box.after .reviews-box-label { color: var(--green); }
+
+        .reviews-box-number {
+            font-size: clamp(48px, 6vw, 72px);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .reviews-box-unit { font-size: 14px; color: var(--gray-text); }
+
+        /* ====== CRM SECTION ====== */
+        .crm {
+            padding: 15vh 10vw;
+            background: var(--gray-light);
+        }
+
+        .crm-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 48px;
+            font-weight: 500;
+        }
+
+        .crm-title {
+            font-size: clamp(28px, 4vw, 56px);
+            font-weight: 600;
+            margin-bottom: 24px;
+            max-width: 700px;
+        }
+
+        .crm-subtitle {
+            font-size: 18px;
+            color: var(--gray-text);
+            margin-bottom: 80px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .crm-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+        }
+
+        .crm-feature {
+            padding: 40px;
+            background: var(--white);
+            border-radius: 8px;
+            border: 1px solid var(--gray-mid);
+        }
+
+        .crm-feature-icon {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .crm-feature h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .crm-feature p {
+            font-size: 14px;
+            color: var(--gray-text);
+            line-height: 1.7;
+        }
+
+        /* ====== PROOF ====== */
+        .proof {
+            padding: 15vh 10vw;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .proof-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 48px;
+        }
+
+        .proof-title {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 600;
+            margin-bottom: 80px;
+        }
+
+        .proof-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 48px;
+            margin-bottom: 64px;
+        }
+
+        .proof-stat-number {
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .proof-stat-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.5;
+        }
+
+        .proof-note {
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 32px;
+            font-style: italic;
+        }
+
+        /* ====== DASHBOARD ====== */
+        .dashboard {
+            padding: 15vh 10vw;
+            background: #0D1117;
+            color: var(--white);
+        }
+
+        .dashboard-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 48px;
+        }
+
+        .dashboard-title {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 16px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 64px;
+            max-width: 500px;
+        }
+
+        .dashboard-mock {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 48px;
+        }
+
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .dashboard-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .dashboard-card-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .dashboard-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .dashboard-card-value.gold { color: var(--gold); }
+        .dashboard-card-value.green { color: #4ADE80; }
+        .dashboard-card-value.teal { color: var(--teal); }
+
+        .dashboard-card-sub {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            margin-top: 8px;
+        }
+
+        .dashboard-bar-chart {
+            margin-top: 32px;
+        }
+
+        .dashboard-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .dashboard-bar-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            width: 140px;
+            flex-shrink: 0;
+        }
+
+        .dashboard-bar {
+            flex: 1;
+            height: 24px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dashboard-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--teal);
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            color: white;
+        }
+
+        /* ====== CAPTURE & NURTURE ====== */
+        .capture-nurture {
+            padding: 15vh 10vw;
+            background: var(--white);
+        }
+
+        .capture-nurture-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 48px;
+            font-weight: 500;
+        }
+
+        .capture-nurture-title {
+            font-size: clamp(28px, 4vw, 56px);
+            font-weight: 600;
+            margin-bottom: 24px;
+            max-width: 800px;
+        }
+
+        .capture-nurture-subtitle {
+            font-size: 18px;
+            color: var(--gray-text);
+            margin-bottom: 80px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .capture-flow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-bottom: 80px;
+        }
+
+        .capture-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .capture-step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 24px;
+            font-size: 24px;
+            color: var(--gray-mid);
+        }
+
+        .capture-step:last-child::after { display: none; }
+
+        .capture-step-num {
+            width: 48px;
+            height: 48px;
+            background: var(--teal);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+
+        .capture-step h4 { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+        .capture-step p { font-size: 13px; color: var(--gray-text); line-height: 1.5; }
+
+        .capture-promise {
+            text-align: center;
+            padding: 48px;
+            background: linear-gradient(180deg, rgba(45,155,155,0.05) 0%, transparent 100%);
+            border: 1px solid var(--gray-mid);
+            border-radius: 8px;
+            font-size: 18px;
+            color: var(--teal);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* ====== PRICING (Setup + Maintenance) ====== */
+        .pricing-section {
+            padding: 15vh 10vw;
+        }
+
+        .pricing-section.setup { background: var(--gray-light); }
+        .pricing-section.maintenance { background: var(--white); }
+
+        .pricing-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 48px;
+            font-weight: 500;
+        }
+
+        .pricing-label.gold { color: var(--gold); }
+        .pricing-label.teal { color: var(--teal); }
+
+        .pricing-title {
+            font-size: clamp(28px, 4vw, 56px);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .pricing-subtitle {
+            font-size: 18px;
+            color: var(--gray-text);
+            margin-bottom: 80px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .pricing-card {
+            padding: 48px 40px;
+            border: 1px solid var(--gray-mid);
+            border-radius: 8px;
+            background: var(--white);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--teal);
+            box-shadow: 0 8px 32px rgba(45,155,155,0.1);
+        }
+
+        .pricing-card.recommended {
+            border-color: var(--teal);
+            background: linear-gradient(180deg, rgba(45,155,155,0.03) 0%, transparent 100%);
+        }
+
+        .pricing-card.recommended::before {
+            content: 'RECOMENDADO';
+            position: absolute;
+            top: -12px;
+            left: 40px;
+            background: var(--teal);
+            color: white;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            padding: 4px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .pricing-card-name {
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-text);
+            margin-bottom: 24px;
+        }
+
+        .pricing-card-price {
+            font-size: clamp(40px, 5vw, 64px);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .pricing-card-period {
+            font-size: 14px;
+            color: var(--gray-text);
+            margin-bottom: 40px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .pricing-features li {
+            font-size: 14px;
+            color: var(--gray-text);
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .pricing-timeline-note {
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-mid);
+            font-size: 13px;
+            color: var(--gray-text);
+            line-height: 1.8;
+        }
+
+        .pricing-timeline-note strong { color: var(--black); font-weight: 600; }
+
+        /* ====== ADD-ONS ====== */
+        .add-ons {
+            padding: 15vh 10vw;
+            background: var(--gray-light);
+        }
+
+        .add-ons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .add-on-item {
+            padding: 32px;
+            background: var(--white);
+            border: 1px solid var(--gray-mid);
+            border-radius: 8px;
+        }
+
+        .add-on-item h4 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+        .add-on-item p { font-size: 14px; color: var(--gray-text); line-height: 1.6; margin-bottom: 16px; }
+        .add-on-price { font-size: 18px; font-weight: 700; color: var(--teal); }
+
+        /* ====== TIMELINE ====== */
+        .timeline {
+            padding: 15vh 10vw;
+            background: var(--gray-light);
+        }
+
+        .timeline-label {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 48px;
+        }
+
+        .timeline-title {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 600;
+            margin-bottom: 80px;
+        }
+
+        .timeline-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 48px;
+        }
+
+        .timeline-step {
+            position: relative;
+        }
+
+        .timeline-step::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            right: -24px;
+            width: calc(100% - 48px);
+            height: 2px;
+            background: var(--gray-mid);
+        }
+
+        .timeline-step:last-child::before { display: none; }
+
+        .timeline-step-week {
+            width: 48px;
+            height: 48px;
+            background: var(--teal);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-step h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .timeline-step p {
+            font-size: 13px;
+            color: var(--gray-text);
+            line-height: 1.6;
+        }
+
+        /* ====== CTA ====== */
+        .cta {
+            padding: 20vh 10vw;
+            background: var(--black);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: clamp(36px, 5vw, 72px);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.5);
+            max-width: 600px;
+            margin: 0 auto 64px;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+        }
+
+        .cta-button {
+            padding: 20px 48px;
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: var(--white);
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .cta-button:hover { background: rgba(255,255,255,0.1); }
+
+        .cta-button.primary {
+            background: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .cta-button.primary:hover { background: #248F8F; }
+
+        /* ====== FOOTER ====== */
+        footer {
+            padding: 80px 10vw;
+            border-top: 1px solid var(--gray-mid);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-brand {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gray-text);
+        }
+
+        .footer-contact {
+            text-align: right;
+            font-size: 13px;
+            color: var(--gray-text);
+            line-height: 1.8;
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 1024px) {
+            .problem-grid, .reviews-comparison, .pillar, .crm-features { grid-template-columns: 1fr; }
+            .pillar { gap: 32px; }
+            .proof-stats, .dashboard-row, .pricing-cards, .add-ons-grid, .reviews-flow, .capture-flow, .timeline-steps { grid-template-columns: 1fr 1fr; }
+            .capture-step::after { display: none; }
+            .flow-step::after { display: none; }
+            .timeline-step::before { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            section, .hero, .cta { padding-left: 6vw; padding-right: 6vw; }
+            .proof-stats, .dashboard-row, .pricing-cards, .add-ons-grid { grid-template-columns: 1fr; }
+            .pillar-features { grid-template-columns: 1fr; }
+            .dashboard-mock { padding: 24px; }
+            .cta-buttons { flex-direction: column; align-items: stretch; }
+            footer { flex-direction: column; gap: 32px; text-align: center; }
+            .footer-contact { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== HERO ====== -->
+    <section class="hero">
+        <div class="hero-label">Eigen Atlas · The Augmented</div>
+        <div class="hero-question serif">¿Cuántos pacientes pierde cada mes por no responder a tiempo?</div>
+        <div class="hero-answer serif">Cero, si tiene el sistema correcto.</div>
+        <div class="hero-meta">
+            Dr. Rafael Chaparro Palma<br>
+            19 Febrero 2026
+        </div>
+        <div class="hero-scroll">Scroll ↓</div>
+    </section>
+
+    <!-- ====== THE PROBLEM ====== -->
+    <section class="problem">
+        <div class="problem-label">El Problema</div>
+        <h2 class="problem-title serif">Un cirujano certificado con 4.9 estrellas no debería depender de contestar WhatsApp manualmente.</h2>
+
+        <div class="problem-grid">
+            <div class="problem-item">
+                <div class="number">01</div>
+                <h4>Leads que se enfrían</h4>
+                <p>Una paciente interesada en lipo manda mensaje a las 10pm. Si no recibe respuesta en 30 minutos, el 40% busca otro doctor. Para cuando usted contesta al día siguiente, ya agendó con alguien más.</p>
+            </div>
+            <div class="problem-item">
+                <div class="number">02</div>
+                <h4>Reviews que no se piden</h4>
+                <p>Tiene 79 reviews con 4.9 estrellas — excelente. Pero los cirujanos que dominan su mercado tienen 200+. Cada paciente satisfecha que no deja review es reputación desperdiciada.</p>
+            </div>
+            <div class="problem-item">
+                <div class="number">03</div>
+                <h4>Marketing sin medición</h4>
+                <p>¿Cuánto invierte en redes o anuncios? ¿Cuántas cirugías genera cada peso invertido? Sin atribución, está invirtiendo a ciegas — puede estar tirando 40% del presupuesto.</p>
+            </div>
+            <div class="problem-item">
+                <div class="number">04</div>
+                <h4>Alcance geográfico limitado</h4>
+                <p>Es uno de los pocos certificados CMCPER en la zona. Pacientes de Culiacán, Guasave, Navojoa y sur de Sonora buscan cirujanos de confianza — pero no lo encuentran porque no está posicionado fuera de Los Mochis.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SOLUTION INTRO ====== -->
+    <section class="solution-intro">
+        <div class="solution-intro-text serif">
+            Eigen Atlas es un <span class="highlight">sistema completo</span> que convierte su práctica en una <span class="highlight">máquina predecible</span> de generación de pacientes — con IA que responde, califica, agenda y da seguimiento <span class="highlight">24/7</span>.
+        </div>
+    </section>
+
+    <!-- ====== 3 PILLARS ====== -->
+    <section class="pillars">
+        <div class="pillars-label">Qué incluye Eigen Atlas</div>
+
+        <div class="pillar">
+            <div class="pillar-number serif">01</div>
+            <div class="pillar-content">
+                <div class="subtitle">Chatbot Inteligente con IA</div>
+                <h3 class="serif">Respuesta inmediata, 24 horas, 7 días</h3>
+                <p>No es un bot genérico que dice "gracias por escribir". Es una IA entrenada específicamente en sus procedimientos, precios y protocolos. Responde como su mejor recepcionista — pero nunca descansa, nunca se equivoca, y responde en segundos.</p>
+                <div class="pillar-features">
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Respuesta en <strong>&lt;30 segundos</strong></span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Conoce todos sus procedimientos</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Califica pacientes automáticamente</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Agenda citas directo en su calendario</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Seguimiento automático a no-respuestas</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>WhatsApp, Instagram, Facebook integrados</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pillar">
+            <div class="pillar-number serif">02</div>
+            <div class="pillar-content">
+                <div class="subtitle">CRM Médico + Atribución</div>
+                <h3 class="serif">Sepa exactamente de dónde viene cada paciente</h3>
+                <p>Un CRM diseñado para cirujanos plásticos. Cada lead queda registrado con su origen (campaña, red social, referido), procedimiento de interés, y status de avance. Dashboard en tiempo real que le muestra qué funciona y qué no — para invertir solo en lo que genera cirugías.</p>
+                <div class="pillar-features">
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Pipeline visual: nuevo → contactado → agendado → operado</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Atribución por campaña y procedimiento</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Costo real por paciente adquirido</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Recordatorios automáticos de citas</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Historial completo por paciente</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Reportes mensuales ejecutivos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pillar">
+            <div class="pillar-number serif">03</div>
+            <div class="pillar-content">
+                <div class="subtitle">Motor de Reviews Automatizado</div>
+                <h3 class="serif">De 79 reviews a 200+ en 6 meses</h3>
+                <p>El sistema detecta cuándo un paciente tuvo su procedimiento y envía una solicitud de review en el momento psicológico óptimo: 7-10 días post-op, cuando el resultado ya es visible pero la emoción de satisfacción está en su punto más alto. Sin esfuerzo manual.</p>
+                <div class="pillar-features">
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Timing basado en fecha de procedimiento</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Mensaje personalizado por procedimiento</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Google + Facebook + redes</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Follow-up suave a los 5 días</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>68% tasa de respuesta comprobada</span>
+                    </div>
+                    <div class="pillar-feature">
+                        <span class="check">✓</span>
+                        <span>Seguimiento post-operatorio incluido</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CHATBOT DEMO ====== -->
+    <section class="chatbot-demo">
+        <div class="chatbot-demo-label">Ejemplo Real</div>
+        <h2 class="chatbot-demo-title serif">Así se ve una conversación con su chatbot</h2>
+
+        <div class="chat-window">
+            <div class="chat-header">
+                <div class="chat-avatar">RC</div>
+                <div>
+                    <div class="chat-name">Dr. Rafael Chaparro</div>
+                    <div class="chat-status">● En línea</div>
+                </div>
+            </div>
+            <div class="chat-body">
+                <div class="chat-msg patient">
+                    Hola, quisiera información sobre lipoescultura, ¿cuánto cuesta?
+                    <span class="time">10:47 PM</span>
+                </div>
+                <div class="chat-msg bot">
+                    ¡Hola! Con gusto le ayudo. El Dr. Chaparro realiza Lipoescultura Láser 360 con tecnología MicroAire, uno de los procedimientos más avanzados disponibles.
+                    <span class="time">10:47 PM</span>
+                </div>
+                <div class="chat-msg bot">
+                    El costo varía según las zonas a tratar. Para darle un presupuesto preciso, ¿le gustaría agendar una consulta de valoración? La consulta tiene un costo de $1,500 MXN y se le descuenta del procedimiento si decide realizarlo.
+                    <span class="time">10:47 PM</span>
+                </div>
+                <div class="chat-msg patient">
+                    Sí, me interesa. ¿Tienen horario disponible esta semana?
+                    <span class="time">10:48 PM</span>
+                </div>
+                <div class="chat-msg bot">
+                    ¡Perfecto! Tenemos disponibilidad el jueves a las 11:00 AM o viernes a las 3:00 PM en Hospital MAC, Piso 10. ¿Cuál le queda mejor? 📋
+                    <span class="time">10:48 PM</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-context">
+            <div class="chat-context-item">
+                <div class="chat-context-icon">⚡</div>
+                <div class="chat-context-text"><strong>Respuesta en 12 segundos.</strong> A las 10:47 PM, cuando su equipo ya descansaba.</div>
+            </div>
+            <div class="chat-context-item">
+                <div class="chat-context-icon">🎯</div>
+                <div class="chat-context-text"><strong>Conoce sus procedimientos.</strong> No dijo "le paso la información" — respondió con detalle real.</div>
+            </div>
+            <div class="chat-context-item">
+                <div class="chat-context-icon">📅</div>
+                <div class="chat-context-text"><strong>Cerró la cita.</strong> En 2 mensajes pasó de pregunta a consulta agendada.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== REVIEWS ENGINE ====== -->
+    <section class="reviews-engine">
+        <div class="reviews-engine-label">Motor de Reputación</div>
+        <h2 class="reviews-engine-title serif">Reviews no son vanidad — son su activo más valioso</h2>
+        <p class="reviews-engine-subtitle">Práctica con 200+ reviews convierte 40% más leads. Rating 4.8+ reduce costo de adquisición 25%. El sistema lo hace automático.</p>
+
+        <div class="reviews-flow">
+            <div class="flow-step">
+                <div class="flow-step-num">1</div>
+                <h4>Procedimiento</h4>
+                <p>Paciente se opera. El sistema registra la fecha.</p>
+            </div>
+            <div class="flow-step">
+                <div class="flow-step-num">2</div>
+                <h4>Día 7-10</h4>
+                <p>Mensaje automático preguntando por su experiencia.</p>
+            </div>
+            <div class="flow-step">
+                <div class="flow-step-num">3</div>
+                <h4>Solicitud</h4>
+                <p>Link directo a Google Reviews. Un tap.</p>
+            </div>
+            <div class="flow-step">
+                <div class="flow-step-num">4</div>
+                <h4>Follow-up</h4>
+                <p>Si no respondió, recordatorio suave a los 5 días.</p>
+            </div>
+        </div>
+
+        <div class="reviews-comparison">
+            <div class="reviews-box before">
+                <div class="reviews-box-label">Sin sistema</div>
+                <div class="reviews-box-number serif">2—3</div>
+                <div class="reviews-box-unit">reviews al mes (si se acuerda de pedir)</div>
+            </div>
+            <div class="reviews-box after">
+                <div class="reviews-box-label">Con Eigen Atlas</div>
+                <div class="reviews-box-number serif">16—24</div>
+                <div class="reviews-box-unit">reviews al mes (4-6 por semana, automatizado)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CRM DETAIL ====== -->
+    <section class="crm">
+        <div class="crm-label">CRM Médico</div>
+        <h2 class="crm-title serif">Todo en un solo lugar</h2>
+        <p class="crm-subtitle">No más hojas de Excel, libretas, o WhatsApp sin orden. Cada paciente, cada lead, cada interacción — organizada y rastreable.</p>
+
+        <div class="crm-features">
+            <div class="crm-feature">
+                <div class="crm-feature-icon">📊</div>
+                <h4>Pipeline Visual</h4>
+                <p>Vea en tiempo real cuántos leads tiene, en qué etapa están, y cuántos se convierten en cirugías. Arrastre y suelte para actualizar status.</p>
+            </div>
+            <div class="crm-feature">
+                <div class="crm-feature-icon">🎯</div>
+                <h4>Atribución Completa</h4>
+                <p>Cada lead sabe de dónde vino: ¿Facebook? ¿Instagram? ¿Referido? ¿Qué anuncio exacto? Invierta solo en lo que funciona.</p>
+            </div>
+            <div class="crm-feature">
+                <div class="crm-feature-icon">🔔</div>
+                <h4>Automatizaciones</h4>
+                <p>Recordatorios de cita, seguimiento post-consulta, reactivación de leads fríos, felicitaciones de cumpleaños. Todo sin mover un dedo.</p>
+            </div>
+            <div class="crm-feature">
+                <div class="crm-feature-icon">📱</div>
+                <h4>Multi-Canal</h4>
+                <p>WhatsApp, Instagram DMs, Facebook Messenger, llamadas — todo converge en un solo inbox. Nunca pierda un mensaje.</p>
+            </div>
+            <div class="crm-feature">
+                <div class="crm-feature-icon">📈</div>
+                <h4>Reportes Ejecutivos</h4>
+                <p>Cada mes recibe un reporte con métricas claras: leads, citas, cirugías, ROI por campaña. Decisiones basadas en datos, no intuición.</p>
+            </div>
+            <div class="crm-feature">
+                <div class="crm-feature-icon">🔒</div>
+                <h4>Datos Seguros</h4>
+                <p>Información de pacientes encriptada y protegida. Cumplimiento con estándares de privacidad médica.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== PROOF ====== -->
+    <section class="proof">
+        <div class="proof-label">Resultados Comprobados</div>
+        <h2 class="proof-title serif">Lo que logramos con otro cirujano plástico certificado</h2>
+
+        <div class="proof-stats">
+            <div>
+                <div class="proof-stat-number serif">2,440</div>
+                <div class="proof-stat-label">Nuevos contactos WhatsApp en 28 días</div>
+            </div>
+            <div>
+                <div class="proof-stat-number serif">$9.56</div>
+                <div class="proof-stat-label">Costo por contacto en mejor campaña (MXN)</div>
+            </div>
+            <div>
+                <div class="proof-stat-number serif">6+</div>
+                <div class="proof-stat-label">Cirugías adicionales generadas por mes</div>
+            </div>
+            <div>
+                <div class="proof-stat-number serif">4—6</div>
+                <div class="proof-stat-label">Reviews nuevas por semana (automatizado)</div>
+            </div>
+        </div>
+
+        <div class="proof-note">
+            * Datos de cirujano plástico certificado CMCPER en la misma región (Sinaloa). Resultados del período Dic 2025 — Ene 2026. Campañas Meta Ads + Eigen Atlas.
+        </div>
+    </section>
+
+    <!-- ====== DASHBOARD ====== -->
+    <section class="dashboard">
+        <div class="dashboard-label">Su Dashboard</div>
+        <h2 class="dashboard-title serif">Control total desde su teléfono</h2>
+        <p class="dashboard-subtitle">Abra su dashboard y vea en tiempo real: cuántos leads tiene, de dónde vienen, y cuánto está generando.</p>
+
+        <div class="dashboard-mock">
+            <div class="dashboard-row">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-label">Leads este mes</div>
+                    <div class="dashboard-card-value teal">52</div>
+                    <div class="dashboard-card-sub">Meta: 60</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-card-label">Citas agendadas</div>
+                    <div class="dashboard-card-value green">26</div>
+                    <div class="dashboard-card-sub">50% conversión</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-card-label">Generación estimada</div>
+                    <div class="dashboard-card-value gold">$1.28M</div>
+                    <div class="dashboard-card-sub">8 cirugías × $160K</div>
+                </div>
+            </div>
+
+            <div class="dashboard-bar-chart">
+                <div class="dashboard-bar-row">
+                    <span class="dashboard-bar-label">Lipo 360</span>
+                    <div class="dashboard-bar">
+                        <div class="dashboard-bar-fill" style="width: 65%;">18 leads</div>
+                    </div>
+                </div>
+                <div class="dashboard-bar-row">
+                    <span class="dashboard-bar-label">Mommy Makeover</span>
+                    <div class="dashboard-bar">
+                        <div class="dashboard-bar-fill" style="width: 55%; background: var(--gold);">15 leads</div>
+                    </div>
+                </div>
+                <div class="dashboard-bar-row">
+                    <span class="dashboard-bar-label">Aumento Glúteo</span>
+                    <div class="dashboard-bar">
+                        <div class="dashboard-bar-fill" style="width: 42%;">12 leads</div>
+                    </div>
+                </div>
+                <div class="dashboard-bar-row">
+                    <span class="dashboard-bar-label">Scarlet S</span>
+                    <div class="dashboard-bar">
+                        <div class="dashboard-bar-fill" style="width: 25%; background: #4ADE80;">7 leads</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CAPTURE & NURTURE ====== -->
+    <section class="capture-nurture">
+        <div class="capture-nurture-label">Sistema de Captura y Nurturing</div>
+        <h2 class="capture-nurture-title serif">Construya su base de datos propia — el activo que nadie le quita</h2>
+        <p class="capture-nurture-subtitle">Lead magnets personalizados + secuencias automatizadas. Capture datos, nutra leads, y conviértalos en pacientes — sin depender solo de ads.</p>
+
+        <div class="capture-flow">
+            <div class="capture-step">
+                <div class="capture-step-num">1</div>
+                <h4>Guía Personalizada</h4>
+                <p>PDF branded con su nombre, credenciales y especialidad. Contenido de valor que atrae pacientes calificados.</p>
+            </div>
+            <div class="capture-step">
+                <div class="capture-step-num">2</div>
+                <h4>Landing de Captura</h4>
+                <p>Página optimizada: nombre + WhatsApp + email. Envío automático de guía + ingreso directo al CRM.</p>
+            </div>
+            <div class="capture-step">
+                <div class="capture-step-num">3</div>
+                <h4>Secuencia Automatizada</h4>
+                <p>Emails + mensajes que educan, construyen confianza y guían hasta que el paciente agenda su consulta.</p>
+            </div>
+            <div class="capture-step">
+                <div class="capture-step-num">4</div>
+                <h4>Retargeting</h4>
+                <p>¿Descargaron pero no agendaron? Ads personalizados en redes los reenganchan con el procedimiento de interés.</p>
+            </div>
+        </div>
+
+        <div class="capture-promise">
+            📌 <strong>Su base de datos es SUYA.</strong> Si deja de pagar ads, la lista sigue siendo suya. Ningún proveedor se la quita.
+        </div>
+    </section>
+
+    <!-- ====== SETUP PRICING ====== -->
+    <section class="pricing-section setup">
+        <div class="pricing-label gold">Implementación · Pago Único</div>
+        <h2 class="pricing-title serif">Setup: elija su nivel</h2>
+        <p class="pricing-subtitle">Todo incluye sistema completo, entrenamiento inicial, y primeros 30 días de ajustes incluidos.</p>
+
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <div class="pricing-card-name">Starter</div>
+                <div class="pricing-card-price serif">$50K</div>
+                <div class="pricing-card-period">MXN · Pago único</div>
+                <ul class="pricing-features">
+                    <li>1 Agente IA (1 workflow)</li>
+                    <li>Infraestructura cloud básica</li>
+                    <li>1 integración (calendario o CRM)</li>
+                    <li>Dashboard inicial</li>
+                    <li>1-2 guías PDF personalizadas</li>
+                    <li>1 landing page de captura</li>
+                    <li>Secuencia de 5 emails</li>
+                </ul>
+                <div class="pricing-timeline-note">
+                    <strong>Entrega:</strong> 1-2 semanas
+                </div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-card-name">Pro</div>
+                <div class="pricing-card-price serif">$150K</div>
+                <div class="pricing-card-period">MXN · Pago único</div>
+                <ul class="pricing-features">
+                    <li>1 Agente IA avanzado</li>
+                    <li>Automatizaciones completas</li>
+                    <li>CRM setup completo</li>
+                    <li>Dashboard básico</li>
+                    <li>4-5 guías PDF + landings</li>
+                    <li>Secuencia completa (7 emails)</li>
+                </ul>
+                <div class="pricing-timeline-note">
+                    <strong>Entrega:</strong> 3-4 semanas
+                </div>
+            </div>
+
+            <div class="pricing-card recommended">
+                <div class="pricing-card-name">Elite</div>
+                <div class="pricing-card-price serif">$300K</div>
+                <div class="pricing-card-period">MXN · Pago único</div>
+                <ul class="pricing-features">
+                    <li>Todo lo del plan Pro</li>
+                    <li>Multi-agentes IA</li>
+                    <li>RAG Knowledge Base</li>
+                    <li>Security scan & hardening</li>
+                    <li>Custom dashboard avanzado</li>
+                    <li>Quiz interactivo</li>
+                    <li>Custom development avanzado</li>
+                    <li>Workflows complejos y escalables</li>
+                    <li>Training para equipo (4 sesiones)</li>
+                    <li>Landing pages a demanda</li>
+                    <li>8+ guías PDF</li>
+                    <li>Copies de ads listos</li>
+                    <li>Calendario de contenido (3 meses)</li>
+                </ul>
+                <div class="pricing-timeline-note">
+                    <strong>Entrega:</strong> 4-6 semanas
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== MAINTENANCE PRICING ====== -->
+    <section class="pricing-section maintenance">
+        <div class="pricing-label teal">Mantenimiento · Mensual</div>
+        <h2 class="pricing-title serif">Mantenimiento: elija su nivel</h2>
+        <p class="pricing-subtitle">Después del setup, su sistema necesita optimización y evolución continua.</p>
+
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <div class="pricing-card-name">Base</div>
+                <div class="pricing-card-price serif">$20K</div>
+                <div class="pricing-card-period">MXN / mes</div>
+                <ul class="pricing-features">
+                    <li>Monitoreo 24/7</li>
+                    <li>Updates y patches menores</li>
+                    <li>Soporte reactivo (4h/mes)</li>
+                    <li>Monitoreo de conversiones</li>
+                    <li>Ajustes menores a landings/emails</li>
+                    <li>Reporte básico mensual</li>
+                </ul>
+                <div class="pricing-timeline-note">
+                    <strong>Ideal para:</strong> Operación estable
+                </div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-card-name">Pro</div>
+                <div class="pricing-card-price serif">$40K</div>
+                <div class="pricing-card-period">MXN / mes</div>
+                <ul class="pricing-features">
+                    <li>Todo lo del plan Base</li>
+                    <li>Optimizaciones mensuales</li>
+                    <li>Mantenimiento de automatizaciones</li>
+                    <li>Soporte proactivo (8h/mes)</li>
+                    <li>Nuevas guías trimestrales</li>
+                    <li>A/B testing de landings</li>
+                    <li>Optimización de secuencias email</li>
+                    <li>Reporte detallado mensual</li>
+                </ul>
+                <div class="pricing-timeline-note">
+                    <strong>Ideal para:</strong> Crecimiento activo
+                </div>
+            </div>
+
+            <div class="pricing-card recommended">
+                <div class="pricing-card-name">Elite</div>
+                <div class="pricing-card-price serif">$70K</div>
+                <div class="pricing-card-period">MXN / mes · Todo incluido</div>
+                <ul class="pricing-features">
+                    <li>Todo lo del plan Pro</li>
+                    <li>Email marketing activo (newsletters quincenales)</li>
+                    <li>Nuevos lead magnets según temporada</li>
+                    <li>Reportes ejecutivos de performance</li>
+                    <li>Custom features ilimitadas</li>
+                    <li>Dev y escalamiento continuo</li>
+                    <li>Sesiones estratégicas mensuales</li>
+                    <li>Sin add-ons extras — TODO incluido</li>
+                </ul>
+                <div class="pricing-timeline-note">
+                    <strong>Ideal para:</strong> Máxima tracción
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ADD-ONS ====== -->
+    <section class="add-ons">
+        <div class="pricing-label gold">Servicios Adicionales</div>
+        <h2 class="pricing-title serif">Add-ons disponibles</h2>
+        <p class="pricing-subtitle">Disponibles en cualquier plan. Escale según necesidad.</p>
+
+        <div class="add-ons-grid">
+            <div class="add-on-item">
+                <h4>📧 Email Marketing Avanzado</h4>
+                <p>Campañas segmentadas, workflows complejos, nurturing enterprise.</p>
+                <div class="add-on-price">+$8K/mes</div>
+            </div>
+            <div class="add-on-item">
+                <h4>💬 Chatbot AI WhatsApp</h4>
+                <p>Chatbot dedicado en WhatsApp Business. Respuestas inteligentes 24/7.</p>
+                <div class="add-on-price">+$6K/mes</div>
+            </div>
+            <div class="add-on-item">
+                <h4>📊 Social Media Tracker</h4>
+                <p>Monitoreo de menciones, análisis de competencia, reportes semanales.</p>
+                <div class="add-on-price">+$5K/mes</div>
+            </div>
+            <div class="add-on-item">
+                <h4>🎥 Video Content Pipeline</h4>
+                <p>4 videos cortos/mes para redes. Edición y calendarización incluida.</p>
+                <div class="add-on-price">+$12K/mes</div>
+            </div>
+            <div class="add-on-item">
+                <h4>📈 Analytics Avanzado</h4>
+                <p>Dashboard custom, análisis de cohortes, predicción de churn.</p>
+                <div class="add-on-price">+$7K/mes</div>
+            </div>
+            <div class="add-on-item">
+                <h4>🔌 Integraciones Custom</h4>
+                <p>Conexión con herramientas específicas. APIs, webhooks, sincronización.</p>
+                <div class="add-on-price">+$10K por integración</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== TIMELINE ====== -->
+    <section class="timeline">
+        <div class="timeline-label">Implementación</div>
+        <h2 class="timeline-title serif">De cero a operando en 4 semanas</h2>
+
+        <div class="timeline-steps">
+            <div class="timeline-step">
+                <div class="timeline-step-week">S1</div>
+                <h4>Configuración</h4>
+                <p>Setup de CRM, integración de canales (WhatsApp, Instagram, Facebook). Levantamiento de información: procedimientos, precios, protocolos.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-step-week">S2</div>
+                <h4>Chatbot + IA</h4>
+                <p>Entrenamiento del chatbot con su información. Pruebas internas. Landing pages por procedimiento.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-step-week">S3</div>
+                <h4>Campañas + Reviews</h4>
+                <p>Activación de campañas Meta Ads segmentadas. Configuración del motor de reviews automatizado.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-step-week">S4</div>
+                <h4>Lanzamiento</h4>
+                <p>Sistema completo en producción. Dashboard activo. Primer reporte de métricas. Optimización continua.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CTA ====== -->
+    <section class="cta">
+        <h2 class="cta-title serif">¿Listo para sistematizar su práctica?</h2>
+        <p class="cta-subtitle">En 4 semanas puede tener un sistema que trabaja por usted 24/7 — generando, calificando y agendando pacientes mientras usted se enfoca en operar.</p>
+
+        <div class="cta-buttons">
+            <a href="https://wa.me/523314397921" class="cta-button primary">Empecemos → WhatsApp</a>
+            <a href="mailto:raul.chio.leon@gmail.com" class="cta-button">Agendar Call</a>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="footer-brand">Eigen Atlas · The Augmented</div>
+        <div class="footer-contact">
+            Raul Zhou<br>
+            raul.chio.leon@gmail.com<br>
+            +52 33 1439 7921
+        </div>
+    </footer>
+
+</body>
+</html>
